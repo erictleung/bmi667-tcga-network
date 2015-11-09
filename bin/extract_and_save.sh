@@ -55,12 +55,14 @@ else
     # 3 extracts only gene names in select columns
     # 4 removes missing gene names represented with '-'
     # 5 alphabetize column values in each row to remove duplicate interactions
-    # 6 sort and keep only unique rows
+    # 6 remove self interactions
+    # 7 sort and keep only unique rows
     awk -F '\t' '{ print $3 "\t" $4 }' $DIR$FILE | \
         sed 1d | \
         sed 's/.*:.*_\(.*\)(shortlabel)	.*:.*_\(.*\)(shortlabel)/\1	\2/' | \
         awk '{ if ($1 != "-" && $2 != "-") print $1 "\t" $2 }' | \
         awk '{ if ($1 > $2) print $2 "\t" $1; else print $1 "\t" $2 }' | \
+        awk '{ if ($1 != $2) print $1 "\t" $2 }' | \
         sort -u > \
         $DIR$PAIR
 fi
