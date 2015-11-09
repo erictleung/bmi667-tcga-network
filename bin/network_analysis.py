@@ -12,7 +12,7 @@ def get_prot_inter():
     """
     DESCRIPTION: Import interactions as an edge list
     INPUT: None
-    OUTPUT: list of edges in separate lists
+    OUTPUT: List of edges in separate lists
     """
     ppList = []
     print "Importing protein interaction pairs into a list."
@@ -26,6 +26,11 @@ def get_prot_inter():
 
 # make larger graph
 def make_net(ppList):
+    """
+    DESCRIPTION: Make a graph object with adjancency list
+    INPUT: List of edges in separate lists
+    OUTPUT: Simple NetworkX graph object
+    """
     ppNet = nx.Graph() # create empty network
     for pp in ppList:
         ppNet.add_edge(pp[0], pp[1]) # add interaction to network
