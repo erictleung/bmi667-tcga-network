@@ -33,6 +33,17 @@ def get_TCGA():
 def tcga_subgraph(ppNet, tcga):
     return ppNet.subgraph(tcga)
 
+# find largest connected component of subgraph
+def largest_component(ppNet):
+    subnetGraphs = nx.connected_component_subgraphs(ppNet)
+    largest = nx.Graph() # empty graph
+    greatN = 0
+    for sub in subnetGraphs:
+        if len(sub.nodes()) > greatN:
+            largest = sub
+            greatN = len(sub.nodes())
+    return largest
+
 # calculate centrality measures
 def calculate_center(tcgaSubgraph):
     centers = {}
