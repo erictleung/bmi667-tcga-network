@@ -101,7 +101,7 @@ def bfs_edges(subnet, source):
     OUTPUT: generator of edges using the breadth first search algorithm
     Templated from: http://networkx.readthedocs.org/en/stable/_modules/networkx/algorithms/traversal/breadth_first_search.html#bfs_edges
     """
-    neighbors = subnet.neighbors_inter
+    neighbors = subnet.neighbors_iter
     visited = set([source])
     queue = [[source, neighbors(source)]]
     while queue:
