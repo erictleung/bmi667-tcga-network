@@ -1,4 +1,4 @@
-#!/bin/pyhon
+#!/usr/bin/env python
 
 # import packages
 import networkx as nx
