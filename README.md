@@ -1,7 +1,10 @@
 # BMI667 TCGA Gene Network Analysis
 
 Network analyses on 127 significantly mutated genes from well-known and emerging
-cellular processes in cancer using Python and Shell scripting.
+cellular processes in cancer using Python and Shell scripting. The paper
+[Mutational landscape and significance across 12 major cancer
+types](http://www.ncbi.nlm.nih.gov/pubmed/24132290) by Kandoth et. al. published
+about the 127 significantly mutated genes.
 
 ## Analysis Instructions
 
