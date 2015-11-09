@@ -65,7 +65,7 @@ def calculate_center(tcgaSubgraph):
     denseMat = nx.adjacency_matrix(tcgaSubgraph).todense() # convert to adj mat
     eigs = numpy.linalg.eig(denseMat)[0] # calculate eigenvalues
     maxEig = max(eigs)
-    alpha = 1 / maxEig
+    alpha = 1 / maxEig.real
 
     # calculate centrality measures
     centers = {}
