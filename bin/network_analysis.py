@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 # import interactions as edge list
 def get_prot_inter():
     ppList = []
-    with open("prot_interaction.tsv", "r") as fh:
+    with open("../data/prot_interaction.tsv", "r") as fh:
         for line in fh:
             splitLine = line.rstrip().split("\t")
             ppList.append(splitLine)
@@ -24,7 +24,7 @@ def make_net(ppList):
 # import TCGA nodes
 def get_TCGA():
     tcga = []
-    with open("tcga_genes.txt", "r") as fh:
+    with open("../data/tcga_genes.txt", "r") as fh:
         for line in fh:
             tcga.append(line.rstrip())
     return tcga
@@ -44,7 +44,7 @@ def calculate_center(tcgaSubgraph):
 
 # write file with centrality measures for nodes
 def write_central(centrality, centralName):
-    fileName = centralName + "Rounded.tsv"
+    fileName = "../data/" + centralName + "Rounded.tsv"
     sortedCenter = sorted(centrality.items(), key = operator.itemgetter(1),
             reverse = True)
     with open(fileName, "w") as fh:
@@ -59,7 +59,7 @@ def write_all(centers):
 # plot and save network
 def plot_net(graph, graphName):
     nx.draw(graph)
-    saveName = graphName + ".png"
+    saveName = "../images/" + graphName + ".png"
     plt.savefig(saveName)
 
 # main function
