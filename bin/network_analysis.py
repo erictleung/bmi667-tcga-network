@@ -62,7 +62,8 @@ def plot_net(graph, graphName):
     saveName = graphName + ".png"
     plt.savefig(saveName)
 
-if __name__ == '__main__':
+# main function
+def main():
     ppList = get_prot_inter()
     ppNet = make_net(ppList)
     tcga = get_TCGA()
@@ -70,3 +71,6 @@ if __name__ == '__main__':
     centers = calculate_center(tcgaSubgraph)
     write_all(centers)
     plot_net(tcgaSubgraph, "tcga_subgraph")
+
+if __name__ == '__main__':
+    main()
