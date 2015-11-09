@@ -48,6 +48,14 @@ if [ -f $DIR$PAIR ]; then
     echo "Pairwise interactions extracted already."
 else
     echo "Extracting pairwise gene interactions."
+
+    # explanation for awk code below
+    # 1 extracts only relavent columns
+    # 2 removes header
+    # 3 extracts only gene names in select columns
+    # 4 removes missing gene names represented with '-'
+    # 5 alphabetize column values in each row to remove duplicate interactions
+    # 6 sort and keep only unique rows
     awk -F '\t' '{ print $3 "\t" $4 }' $DIR$FILE | \
         sed 1d | \
         sed 's/.*:.*_\(.*\)(shortlabel)	.*:.*_\(.*\)(shortlabel)/\1	\2/' | \
