@@ -81,6 +81,29 @@ def plot_net(graph, graphName):
     saveName = "../images/" + graphName + ".png"
     plt.savefig(saveName)
 
+def bfs_edges(subnet, source):
+    """
+    INPUT: NetworkX undirected graph and string of node
+    OUTPUT: generator of edges using the breadth first search algorithm
+    Templated from: http://networkx.readthedocs.org/en/stable/_modules/networkx/algorithms/traversal/breadth_first_search.html#bfs_edges
+    """
+    neighbors = subnet.neighbors_inter
+    visited = set([source])
+    queue = [[source, neighbors(source)]]
+    while queue:
+        # children is an iterator
+        parent, children = queue[0]
+        try:
+            child = next(children)
+            if child not in visited:
+                yield parent, child # add to iterator generator
+                visited.add(child)
+                queue.append([child, neighbors(child)])
+        except StopIteration:
+            queue.reverse()
+            queue.pop()
+            queue.reverse()
+
 # main function
 def main():
     ppList = get_prot_inter()
