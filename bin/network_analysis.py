@@ -62,8 +62,8 @@ def largest_component(ppNet):
 # calculate centrality measures
 def calculate_center(tcgaSubgraph):
     # calculate maximum eigenvalue of graph
-    laplace = nx.normalized_laplacian_matrix(tcgaSubgraph)
-    eigs = numpy.linalg.eigvals(laplace.A)
+    denseMat = nx.adjacency_matrix(tcgaSubgraph).todense() # convert to adj mat
+    eigs = numpy.linalg.eig(denseMat)[0] # calculate eigenvalues
     maxEig = max(eigs)
     alpha = 1 / maxEig
 
@@ -71,7 +71,7 @@ def calculate_center(tcgaSubgraph):
     centers = {}
     centers["eigen"] = nx.eigenvector_centrality(tcgaSubgraph)
     centers["degree"] = nx.degree_centrality(tcgaSubgraph)
-    centers["katz"] = nx.katz_centrality(tcgaSubgraph, alpha=0.1, beta=1.0)
+    centers["katz"] = nx.katz_centrality(tcgaSubgraph, alpha=alpha-0.01, beta=1.0)
     centers["pagerank"] = nx.pagerank(tcgaSubgraph)
     return centers
 
