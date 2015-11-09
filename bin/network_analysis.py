@@ -119,7 +119,7 @@ def plot_net(graph, graphName):
     """
     DESCRIPTION: Plot and save network as image
     INPUT: Graph object and desired name of image file
-    OUTPUT: Plotted network visualization as .png file 
+    OUTPUT: Plotted network visualization as .png file
     """
     nx.draw(graph)
     saveName = "../images/" + graphName + ".png"
@@ -148,17 +148,41 @@ def bfs_edges(subnet, source):
             queue.pop()
             queue.reverse()
 
-def num_components(subgraph):
+def num_components(subgraph, centrality):
     """
     DESCRIPTION: Find number of components in graph
-    INPUT: Graph object
+    INPUT: Graph object and dictionary of centrality measures
     OUTPUT: Number of components
     """
-    return 1
+    # get gene with largest centrality measure
+    start = max(centrality.iteritems(), key=operator.itemgetter(1))[0]
+
+    comp = 1 # count number of components
+    nodes = set(subgraph.nodes())
+    unvisited = set(nodes)
+
+    paths = bfs_edges(subgraph, start) # get paths from source
+
+    mapPaths = map(set, paths) # convert inner lists to sets
+    reducePath = reduce(lambda x, y: x.union(y), mapPaths) # reduce to one set
+
+    unvisited = unvisited.difference(reducePath) # find left over nodes
+
+    # continue doing breadth first searches on left over nodes to find
+    # components
+    while unvisited:
+        node = unvisited.pop() # take random node to examine
+        paths = bfs_edges(subgraph, node)
+        mapPaths = map(set, paths)
+        reducePath = reduce(lambda x, y: x.union(y), mapPaths)
+        unvisited = unvisited.difference(reducePath) # find left over nodes
+        comp += 1
+
+    return comp
 
 def main():
     """
-    DESCRIPTIOn: Main function to run entire analysis
+    DESCRIPTION: Main function to run entire analysis
     INPUT: None
     OUTPUT: The network analysis and plot of TCGA subgraph
     """
