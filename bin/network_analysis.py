@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# Python: 2.7.8
+
 # import packages
 import networkx as nx
 import operator
