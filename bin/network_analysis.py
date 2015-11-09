@@ -8,13 +8,20 @@ import operator
 import matplotlib.pyplot as plt
 import numpy.linalg
 
-# import interactions as edge list
 def get_prot_inter():
+    """
+    DESCRIPTION: Import interactions as an edge list
+    INPUT: None
+    OUTPUT: list of edges in separate lists
+    """
     ppList = []
+    print "Importing protein interaction pairs into a list."
     with open("../data/prot_interaction.tsv", "r") as fh:
         for line in fh:
             splitLine = line.rstrip().split("\t")
             ppList.append(splitLine)
+    print "Successfully imported protein interaction pairs into a list."
+    print "There are %d edges in this network" % (len(ppList))
     return ppList
 
 # make larger graph
