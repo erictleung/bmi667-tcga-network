@@ -181,6 +181,32 @@ def num_components(subgraph, centrality):
     print "There are %d components in the subgraph." % (comp)
     return comp
 
+def pairwise_dist(graph):
+    """
+    DESCRIPTION: Find all pairwise distances between genes
+    INPUT: Graph object
+    OUTPUT: dictionary with keys being genes and values being dictionaries of
+    distances
+    """
+    print "Calculating all pairwise distances."
+    allDist = {} # dictionary to hold pairwise distances for all nodes
+    for node in graph.nodes():
+        paths = bfs_edges(graph, node) # breadth first search algorithm
+        dist = {} # dictionary to carry total distance from source
+        for edge in paths:
+            # need to start distance calculation with source node
+            if node in edge:
+                neighbor = set(edge).difference(set([node])).pop()
+                dist[neighbor] = 1
+            else:
+                if edge[0] in dist.keys():
+                    dist[edge[1]] = dist[edge[0]] + 1
+                else:
+                    dist[edge[0]] = dist[edge[1]] + 1
+        allDist[node] = dist
+    print "Finishing calculating all pairwise distances"
+    return allDist
+
 def main():
     """
     DESCRIPTION: Main function to run entire analysis
@@ -196,6 +222,7 @@ def main():
     write_all(centers)
     plot_net(tcgaSubgraph, "tcga_subgraph")
     comp = num_components(tcgaSubgraph, centers["degree"])
+    allDist = pairwise_dist(tcgaSubgraph)
 
 if __name__ == '__main__':
     main()
