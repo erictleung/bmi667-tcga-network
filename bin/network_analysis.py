@@ -178,6 +178,7 @@ def num_components(subgraph, centrality):
         unvisited = unvisited.difference(reducePath) # find left over nodes
         comp += 1
 
+    print "There are %d components in the subgraph." % (comp)
     return comp
 
 def main():
@@ -194,6 +195,7 @@ def main():
     centers = calculate_center(tcgaSubgraph)
     write_all(centers)
     plot_net(tcgaSubgraph, "tcga_subgraph")
+    comp = num_components(tcgaSubgraph, centers["degree"])
 
 if __name__ == '__main__':
     main()
