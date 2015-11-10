@@ -179,6 +179,7 @@ def average_path(allDist):
     INPUT: Dictionary of dictionaries of path lengths
     OUTPUT: Average shortest path
     """
+    print "Calculating the average path of the network"
     master = []
     visited = []
     for nodeA in allDist.keys():
@@ -191,7 +192,7 @@ def average_path(allDist):
             else:
                 next
     avgPath = float(sum(master)) / len(master)
-    print "The average shortest path of the TCGA subgraph is %d" % (avgPath)
+    print "The average shortest path of the TCGA subgraph is %.3f" % (avgPath)
     return avgPath
 
 def diameter(allDist):
@@ -201,8 +202,9 @@ def diameter(allDist):
     INPUT: Dictionary of dictionaries of path lengths
     OUTPUT: Longest shortest path between any two gene interactions
     """
+    print "Calculating the longest shortest path in the network"
     maxVal = [max(allDist[node].values()) for node in allDist.keys()]
-    print "The diameter for the TCGA gene interaction is %d" % (maxVal)
+    print "The diameter for the TCGA gene interaction is %d" % (maxVal[0])
     return maxVal
 
 def main():
@@ -219,6 +221,8 @@ def main():
     centers = calculate_center(tcgaSubgraph)
     comp = num_components(tcgaSubgraph, centers["degree"])
     allDist = pairwise_dist(tcgaSubgraph)
+    avgPath = average_path(allDist)
+    maxPath = diameter(allDist)
 
 if __name__ == '__main__':
     main()
