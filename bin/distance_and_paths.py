@@ -194,6 +194,17 @@ def average_path(allDist):
     print "The average shortest path of the TCGA subgraph is %d" % (avgPath)
     return avgPath
 
+def diameter(allDist):
+    """
+    DESCRIPTION: Calculates diameter (i.e. longest shortest path between any two
+    nodes) of the network
+    INPUT: Dictionary of dictionaries of path lengths
+    OUTPUT: Longest shortest path between any two gene interactions
+    """
+    maxVal = [max(allDist[node].values()) for node in allDist.keys()]
+    print "The diameter for the TCGA gene interaction is %d" % (maxVal)
+    return maxVal
+
 def main():
     """
     DESCRIPTION: Main function to run entire analysis
