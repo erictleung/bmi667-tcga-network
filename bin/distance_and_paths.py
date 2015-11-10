@@ -3,10 +3,10 @@
 # Python: 2.7.8
 
 # import packages
-import networkx as nx
+import networkx as nx  # Version 1.9.1
 import operator
-import matplotlib.pyplot as plt
-import numpy.linalg
+import matplotlib.pyplot as plt  # Version 1.4.0
+import numpy.linalg  # Version 1.9.2
 
 
 def get_prot_inter():
