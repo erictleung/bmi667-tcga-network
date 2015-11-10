@@ -91,39 +91,87 @@ def calculate_center(tcgaSubgraph):
     centers["pagerank"] = nx.pagerank(tcgaSubgraph)
     return centers
 
-# write file with centrality measures for nodes
-def write_central(centrality, centralName):
+def bfs_edges(subnet, source):
     """
-    DESCRIPTION: Write a file with the centrality measures for nodes as a .tsv
-    file
-    INPUT: Dictionary of centrality and name of centrality
-    OUTPUT: A tab-delimited file of centrality measure
+    INPUT: NetworkX undirected graph and string of node
+    OUTPUT: generator of edges using the breadth first search algorithm
+    Templated from: http://networkx.readthedocs.org/en/stable/_modules/networkx/algorithms/traversal/breadth_first_search.html#bfs_edges
     """
-    fileName = "../data/" + centralName + "Rounded.tsv"
-    sortedCenter = sorted(centrality.items(), key = operator.itemgetter(1),
-            reverse = True)
-    with open(fileName, "w") as fh:
-        for pair in sortedCenter:
-            fh.write(pair[0] + "\t" + str(round(pair[1], 4)) + "\n")
+    neighbors = subnet.neighbors_iter
+    visited = set([source])
+    queue = [[source, neighbors(source)]]
+    while queue:
+        # children is an iterator
+        parent, children = queue[0]
+        try:
+            child = next(children)
+            if child not in visited:
+                yield parent, child # add to iterator generator
+                visited.add(child)
+                queue.append([child, neighbors(child)])
+        except StopIteration:
+            queue.reverse()
+            queue.pop()
+            queue.reverse()
 
-def write_all(centers):
+def num_components(subgraph, centrality):
     """
-    DESCRIPTION: Write file for each of the centralities
-    INTPUT: Dictionary with each of the centralities
-    OUTPUT: Separate file for each centrality measure
+    DESCRIPTION: Find number of components in graph
+    INPUT: Graph object and dictionary of centrality measures
+    OUTPUT: Number of components
     """
-    for center in centers.keys():
-        write_central(centers[center], center)
+    # get gene with largest centrality measure
+    start = max(centrality.iteritems(), key=operator.itemgetter(1))[0]
 
-def plot_net(graph, graphName):
+    comp = 1 # count number of components
+    nodes = set(subgraph.nodes())
+    unvisited = set(nodes)
+
+    paths = bfs_edges(subgraph, start) # get paths from source
+
+    mapPaths = map(set, paths) # convert inner lists to sets
+    reducePath = reduce(lambda x, y: x.union(y), mapPaths) # reduce to one set
+
+    unvisited = unvisited.difference(reducePath) # find left over nodes
+
+    # continue doing breadth first searches on left over nodes to find
+    # components
+    while unvisited:
+        node = unvisited.pop() # take random node to examine
+        paths = bfs_edges(subgraph, node)
+        mapPaths = map(set, paths)
+        reducePath = reduce(lambda x, y: x.union(y), mapPaths)
+        unvisited = unvisited.difference(reducePath) # find left over nodes
+        comp += 1
+
+    print "There are %d components in the subgraph." % (comp)
+    return comp
+
+def pairwise_dist(graph):
     """
-    DESCRIPTION: Plot and save network as image
-    INPUT: Graph object and desired name of image file
-    OUTPUT: Plotted network visualization as .png file
+    DESCRIPTION: Find all pairwise distances between genes
+    INPUT: Graph object
+    OUTPUT: dictionary with keys being genes and values being dictionaries of
+    distances
     """
-    nx.draw(graph)
-    saveName = "../images/" + graphName + ".png"
-    plt.savefig(saveName)
+    print "Calculating all pairwise distances."
+    allDist = {} # dictionary to hold pairwise distances for all nodes
+    for node in graph.nodes():
+        paths = bfs_edges(graph, node) # breadth first search algorithm
+        dist = {} # dictionary to carry total distance from source
+        for edge in paths:
+            # need to start distance calculation with source node
+            if node in edge:
+                neighbor = set(edge).difference(set([node])).pop()
+                dist[neighbor] = 1
+            else:
+                if edge[0] in dist.keys():
+                    dist[edge[1]] = dist[edge[0]] + 1
+                else:
+                    dist[edge[0]] = dist[edge[1]] + 1
+        allDist[node] = dist
+    print "Finishing calculating all pairwise distances"
+    return allDist
 
 def main():
     """
@@ -137,8 +185,8 @@ def main():
     tcgaSubgraphRaw = tcga_subgraph(ppNet, tcga)
     tcgaSubgraph = largest_component(tcgaSubgraphRaw)
     centers = calculate_center(tcgaSubgraph)
-    write_all(centers)
-    plot_net(tcgaSubgraph, "tcga_subgraph")
+    comp = num_components(tcgaSubgraph, centers["degree"])
+    allDist = pairwise_dist(tcgaSubgraph)
 
 if __name__ == '__main__':
     main()
