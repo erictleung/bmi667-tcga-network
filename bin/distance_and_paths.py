@@ -173,6 +173,27 @@ def pairwise_dist(graph):
     print "Finishing calculating all pairwise distances"
     return allDist
 
+def average_path(allDist):
+    """
+    DESCRIPTION: Calculates average path of a network
+    INPUT: Dictionary of dictionaries of path lengths
+    OUTPUT: Average shortest path
+    """
+    master = []
+    visited = []
+    for nodeA in allDist.keys():
+        for nodeB in allDist[nodeA].keys():
+            if set([nodeA, nodeB]) not in master:
+                onePath = allDist[nodeA][nodeB]
+                twoPath = allDist[nodeB][nodeA]
+                master.append(min(onePath, twoPath)) # add shortest path
+                visited.append(set([nodeA, nodeB]))
+            else:
+                next
+    avgPath = float(sum(master)) / len(master)
+    print "The average shortest path of the TCGA subgraph is %d" % (avgPath)
+    return avgPath
+
 def main():
     """
     DESCRIPTION: Main function to run entire analysis
