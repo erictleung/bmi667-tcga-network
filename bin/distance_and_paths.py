@@ -216,8 +216,8 @@ def diameter(allDist):
     OUTPUT: Longest shortest path between any two gene interactions
     """
     print "Calculating the longest shortest path in the network"
-    maxVal = [max(allDist[node].values()) for node in allDist.keys()]
-    print "The diameter for the TCGA gene interaction is %d" % (maxVal[0])
+    maxVal = max([max(allDist[node].values()) for node in allDist.keys()])
+    print "The diameter for the TCGA gene interaction is %d" % (maxVal)
     return maxVal
 
 
