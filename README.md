@@ -6,6 +6,14 @@ cellular processes in cancer using Python and Shell scripting. The paper
 types](http://www.ncbi.nlm.nih.gov/pubmed/24132290) by Kandoth et. al. published
 about the 127 significantly mutated genes.
 
+## Execute Analysis
+
+```shell
+bash extract_and_save.sh
+python network_analysis.py
+python distance_and_paths.py
+```
+
 ## Analysis Instructions
 
 ### Part 1
