@@ -9,9 +9,9 @@ about the 127 significantly mutated genes.
 ## Execute Analysis
 
 ```shell
-bash extract_and_save.sh
-python network_analysis.py
-python distance_and_paths.py
+$ bash extract_and_save.sh
+$ python network_analysis.py
+$ python distance_and_paths.py
 ```
 
 ## Analysis Instructions
