@@ -35,6 +35,11 @@ $ python distance_and_paths.py
 - Calculate pair-wise distances.
 - Calculate average shortest path and the diameter of the sub-network.
 
+### Part 3
+
+- Try to develop a random permutation method to check whether or not the average
+  shortest path obtained from last week's assignment is significant.
+
 ## Contents
 
 - `bin`: scripts directory
