@@ -6,6 +6,7 @@
 import networkx as nx  # Version 1.9.1
 import operator
 
+
 def get_prot_inter():
     """
     DESCRIPTION: Import interactions as an edge list
@@ -73,8 +74,8 @@ def tcga_subgraph(largest, tcga):
     OUTPUT: List of genes in TCGA that can map to the largest component of the
     protein-protein interaction network
     """
-    commonTcgaGeneSet = set(largest.nodes()).intersection(sed(tcga))
-    commonTcgaGeneList = list(keepNodesSet)
+    commonTcgaGeneSet = set(largest.nodes()).intersection(set(tcga))
+    commonTcgaGeneList = list(commonTcgaGeneSet)
     return commonTcgaGeneList
 
 
