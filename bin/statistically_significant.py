@@ -78,30 +78,6 @@ def tcga_subgraph(largest, tcga):
     return commonTcgaGeneList
 
 
-def calculate_center(tcgaSubgraph):
-    """
-    DESCRIPTION: Calculate centrality measures
-    INPUT: Graph object
-    OUTPUT: Dictionary of dictionaries, each being a different centrality
-    measure
-    """
-    # calculate maximum eigenvalue of graph
-    denseMat = nx.adjacency_matrix(tcgaSubgraph).todense()  # make adj mat
-    eigs = numpy.linalg.eig(denseMat)[0]  # calculate eigenvalues
-    maxEig = max(eigs)
-    alpha = 1 / maxEig.real
-
-    # calculate centrality measures
-    centers = {}
-    centers["eigen"] = nx.eigenvector_centrality(tcgaSubgraph)
-    centers["degree"] = nx.degree_centrality(tcgaSubgraph)
-    centers["katz"] = nx.katz_centrality(tcgaSubgraph,
-                                         alpha=alpha-0.01,
-                                         beta=1.0)
-    centers["pagerank"] = nx.pagerank(tcgaSubgraph)
-    return centers
-
-
 def bfs_edges(subnet, source):
     """
     INPUT: NetworkX undirected graph and string of node
@@ -124,40 +100,6 @@ def bfs_edges(subnet, source):
             queue.reverse()
             queue.pop()
             queue.reverse()
-
-
-def num_components(subgraph, centrality):
-    """
-    DESCRIPTION: Find number of components in graph
-    INPUT: Graph object and dictionary of centrality measures
-    OUTPUT: Number of components
-    """
-    # get gene with largest centrality measure
-    start = max(centrality.iteritems(), key=operator.itemgetter(1))[0]
-
-    comp = 1  # count number of components
-    nodes = set(subgraph.nodes())
-    unvisited = set(nodes)
-
-    paths = bfs_edges(subgraph, start)  # get paths from source
-
-    mapPaths = map(set, paths)  # convert inner lists to sets
-    reducePath = reduce(lambda x, y: x.union(y), mapPaths)  # reduce to one set
-
-    unvisited = unvisited.difference(reducePath)  # find left over nodes
-
-    # continue doing breadth first searches on left over nodes to find
-    # components
-    while unvisited:
-        node = unvisited.pop()  # take random node to examine
-        paths = bfs_edges(subgraph, node)
-        mapPaths = map(set, paths)
-        reducePath = reduce(lambda x, y: x.union(y), mapPaths)
-        unvisited = unvisited.difference(reducePath)  # find left over nodes
-        comp += 1
-
-    print "There are %d components in the subgraph." % (comp)
-    return comp
 
 
 def pairwise_dist(graph):
@@ -210,19 +152,6 @@ def average_path(allDist):
     return avgPath
 
 
-def diameter(allDist):
-    """
-    DESCRIPTION: Calculates diameter (i.e. longest shortest path between two
-    nodes) of the network
-    INPUT: Dictionary of dictionaries of path lengths
-    OUTPUT: Longest shortest path between any two gene interactions
-    """
-    print "Calculating the longest shortest path in the network"
-    maxVal = max([max(allDist[node].values()) for node in allDist.keys()])
-    print "The diameter for the TCGA gene interaction is %d" % (maxVal)
-    return maxVal
-
-
 def main():
     """
     DESCRIPTION: Main function to run entire analysis
@@ -234,11 +163,6 @@ def main():
     tcga = get_TCGA()
     largest = largest_component(ppNet)
     commonTcgaGeneList = tcga_subgraph(largest, tcga)
-    centers = calculate_center(tcgaSubgraph)
-    comp = num_components(tcgaSubgraph, centers["degree"])
-    allDist = pairwise_dist(tcgaSubgraph)
-    avgPath = average_path(allDist)
-    maxPath = diameter(allDist)
 
 if __name__ == '__main__':
     main()
