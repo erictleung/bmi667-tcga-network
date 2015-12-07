@@ -129,6 +129,14 @@ def pairwise_dist(graph):
     print "Finishing calculating all pairwise distances"
     return allDist
 
+def shortest_path(allDist):
+    """
+    DESCRIPTION: Finds the shortest path in the network
+    INPUT: Dictionary of dictionaries of path lengths
+    OUTPUT: Shortest path length
+    """
+    return min([allDist[key].values() for key in allDist.keys()])
+
 
 def average_path(allDist):
     """
